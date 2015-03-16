@@ -1,4 +1,11 @@
 (function() {
+  function init(){
+    $('#startupOverallComparison').highcharts(startupOverallComparison);
+    $('#bootstrappingTimes').highcharts(bootstrappingTimes);
+    $('#dalvikBootstrappingTimes').highcharts(dalvikBootstrappingTimes);
+    $('#helloBenchmark').highcharts(makeBenchmarksChart(times['hello'], true, true));
+  }
+
   var startupOverallComparison = {
     chart: {
       type: 'column'
@@ -207,13 +214,6 @@
                  task: [157, 196, 262, 305]},
     }
   };
-
-  function init(){
-    $('#startupOverallComparison').highcharts(startupOverallComparison);
-    $('#bootstrappingTimes').highcharts(bootstrappingTimes);
-    $('#dalvikBootstrappingTimes').highcharts(dalvikBootstrappingTimes);
-    $('#helloBenchmark').highcharts(makeBenchmarksChart(times['hello'], true, true, 4000));
-  }
 
   function makeStartupChart(times, isStartup, index){
     var max = 4000;

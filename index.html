@@ -43,11 +43,52 @@
 
 		<section>
 			<h1>Clojure on Android</h1>
-			<h3>Or: Why Clojure starts so slowly</h3>
 			<p>
 				Nicholas Kariniemi
 			</p>
 			<img class="normal-image" data-src="img/clojure_android.png" />
+			<br/>
+			Reaktor 2015.3.19
+		</section>
+
+		<section>
+			<h3>Why Clojure on Android?</h3>
+			<ul>
+				<li>Android today: Java 7(ish)</li>
+                <li>Functional goodness</li>
+				<li>Concurrency features</li>
+				<li>Dynamic development</li>
+				<li>Java interop</li>
+			</ul>
+		</section>
+
+		<section>
+			OK, so Clojure on Android is awesome. Let's use it!
+		</section>
+
+		<section>
+			Hello Clojure on Android!
+			<pre><code data-trim>
+(ns com.android.helloworld.HelloWorld
+  (:gen-class
+   :extends android.app.Activity
+   :exposes-methods {onCreate superOnCreate})
+  (:import [android.app Activity]
+           [android.os Bundle]))
+
+(defn -onCreate [this #^android.os.Bundle bundle]
+  (.superOnCreate this bundle)
+  (.setContentView this com.android.helloworld.R$layout/main))
+			</code></pre>
+		</section>
+
+		<section data-background="white">
+			<img class="normal-image" data-src="img/android_loader.gif" />
+			<br/>
+		</section>
+
+		<section>
+			Startup time is a problem.
 		</section>
 
 		<section>
@@ -59,6 +100,7 @@
 
 		<section>
 			<ul style="font-size: 30px;">
+				<h3>2013 State of Clojure Survey Responses</h3>
 				<li class="fragment">slow start-up time of jvm</li>
 				<li class="fragment">JVM Prejudice, I used to have such against Java. JVM startup time still sucks</li>
 				<li class="fragment">its usefulness in many potential applications is limited by the jvm's startup time</li>
@@ -75,13 +117,13 @@
 		</section>
 
 		<section>
+			<p>Alex Miller analysis of 2013 State of Clojure survey:</p>
 			<p>
-				"By far the largest subset of performance-related complaints were about JVM
-				startup time. Phil Hagelberg has also reported that this is one of, perhaps the
+				<span class="fragment highlight-blue">"By far the largest subset of performance-related complaints were about JVM
+				startup time. </span>Phil Hagelberg has also reported that this is one of, perhaps the
 				highest, complaint of leiningen users as well.... JVM startup time is never going to go away..., but there are likely still things that can be done to decrease
 				Clojure loading time or better control the loading of code"
 			</p>
-			<p>Alex Miller analysis of 2013 State of Clojure survey</p>
 		</section>
 
 		<section>
@@ -168,51 +210,54 @@
 		</section>
 
 		<section>
+			<h3>Java & Clojure Hello World</h3>
+			<small>
 					<pre><code data-trim>
-						// Java hello world
-						public class Hello {
-						public static void main(String[] args){
-						System.out.println("Hello world");
-						}
-						}
+// Java hello world
+public class Hello {
+    public static void main(String[] args){
+        System.out.println("Hello world");
+    }
+}
 					</code></pre>
 
 					<pre><code data-trim>
-						// Clojure hello world
-						(ns hello.core
-						(:gen-class))
+// Clojure hello world
+(ns hello.core
+(:gen-class))
 
-						(defn -main [& args]
-						(println "Hello world"))
+(defn -main [& args]
+  (println "Hello world"))
 					</code></pre>
 
 					<pre><code data-trim>
-						# Compile
-						$ javac Hello.java
-						$ javac -cp .:clojure-1.6.0.jar -Dclojure.compile.path=./ clojure.lang.Compile hello.core
+# Compile
+$ javac Hello.java
+$ javac -cp .:clojure-1.6.0.jar -Dclojure.compile.path=./ clojure.lang.Compile hello.core
 					</code></pre>
 
 					<pre><code data-trim>
-						# Run
-						$ time java Hello
-						$ time java -cp ../../clojure-1.6.0.jar:target/classes hello.core
+# Run
+$ time java Hello
+$ time java -cp ../../clojure-1.6.0.jar:target/classes hello.core
 					</code></pre>
-		</section>
+		</section></small>
 		<section>
+			<h3>Java & Clojure Hello World Run Times</h3>
 					<pre><code data-trim>
-						# Run
-						$ time java Hello
-						Hello world
-						0.03user 0.00system 0:00.04elapsed 102%CPU (0avgtext+0avgdata 15444maxresident)k
-						0inputs+64outputs (0major+4004minor)pagefaults 0swaps
-
-						$ time java -cp ../../clojure-1.6.0.jar:target/classes hello.core
-						Hello world
-						0.99user 0.03system 0:00.80elapsed 128%CPU (0avgtext+0avgdata 66316maxresident)k
-						0inputs+64outputs (0major+19191minor)pagefaults 0swaps
+$ time java Hello
+Hello world
+0.03user 0.00system 0:00.04elapsed 102%CPU (0avgtext+0avgdata 15444maxresident)k
+0inputs+64outputs (0major+4004minor)pagefaults 0swaps
+						</code></pre>
+			<code data-trim><pre>
+$ time java -cp ../../clojure-1.6.0.jar:target/classes hello.core
+Hello world
+0.99user 0.03system 0:00.80elapsed 128%CPU (0avgtext+0avgdata 66316maxresident)k
+0inputs+64outputs (0major+19191minor)pagefaults 0swaps
 					</code></pre>
-			<div>Java: 0.04 seconds</div>
-			<div>Clojure: 0.80 seconds</div>
+			<div>Java: <span class="fragment">0.04 seconds</span></div>
+			<div>Clojure: <span class="fragment">0.80 seconds</span></div>
 		</section>
 
 		<section>
@@ -231,12 +276,17 @@
 		</section>
 
 		<section>
+			<p>Or in other words:</p>
+            <h2 class="fragment">Stop calling it JVM startup time, people</h2>
+		</section>
+
+		<section>
 			<p>Question: HOW slow does Clojure start?</p>
 		</section>
 
 		<section data-background="white">
 			This slow:
-			<div id="startupOverallComparison" class="diagram">
+			<div id="startupOverallComparison" class="diagram" />
 		</section>
 
 		<section>
@@ -245,7 +295,7 @@
 
 		<section data-background="white">
 			Yup. Clojure on Android starts even slower:
-			<div id="startupOverallComparison" class="diagram">
+			<div id="startupOverallComparison" class="diagram" />
 		</section>
 
 		<section>
@@ -275,6 +325,14 @@
 		<section data-background="white">
 			<p>Larger apps start even slower:</p>
 			<div id="benchmarksStartup" class="diagram"></div>
+		</section>
+
+		<section>
+			<i>"Not everything is awesome"</i>
+			<br/>
+			- Rich Hickey
+			<br/>
+			<small>(as quoted by David Nolen)</small>
 		</section>
 
 		<section>
@@ -317,8 +375,7 @@
 
 		<section>
 			<h3>clojure/core__init.class</h3>
-			<small>
-				<code><pre>
+			<small><code><pre>
 static {
     // Create Vars and metadata (11/17%)
     __init0();
@@ -372,63 +429,69 @@ static {
 		<section data-transition="none">
 			<p>Why? Clojure is <i>dynamic</i>.</p>
 			<ul>
-				<li><strike>Dynamic typing</strike>. No. We're not talking about that.</li>
-				<li class="fragment">Dynamic binding <span class="fragment">+ <i>reified</i> language constructs</span><br/><span class="fragment">--> Dynamic development (REPL)</span>
-				</li>
-				<li class="fragment">Reification: turning a compiler detail into something you can play with at run time</li>
+				<li><strike>Dynamic typing</strike>. Yes but no. We're not talking about that.</li>
+				<li class="fragment">Dynamic binding</li>
+				<li class="fragment">+ <i>reified</i> language constructs</li>
+				<li class="fragment">+ dynamic compilation & evaluation</li>
+				<li class="fragment">--> Dynamic development (REPL)</li>
 			</ul>
+			<br />
+			<br />
+			<blockquote class="fragment">
+				Reification: turning a compiler detail into something you can play with at run time
+			</blockquote>
 		</section>
 
 		<section>
 			<p>Clojure is dynamic like this:</p>
 					<pre><code data-trim>
-						hello.core=> (def foo 1)
-						#'hello.core/foo
-						hello.core=> (def print-foo (fn [] (println foo)))
-						#'hello.core/print-foo
-						hello.core=> (print-foo)
-						1
-						nil
-						hello.core=> (def foo 2)
-						#'hello.core/foo
-						hello.core=> (print-foo)
-						2
+hello.core=> (def foo 1)
+#'hello.core/foo
+hello.core=> (def print-foo (fn [] (println foo)))
+#'hello.core/print-foo
+hello.core=> (print-foo)
+1
+nil
+hello.core=> (def foo 2)
+#'hello.core/foo
+hello.core=> (print-foo)
+2
 					</code></pre>
 		</section>
 
 		<section>
-			<p>Which might actually look like this:</p>
+			<p>Which can also look like this:</p>
 					<pre><code class="clojure">user=> (start-system)
-						Connected to mongo at localhost: grub-dev
-						Started server on localhost: 3000
+Connected to mongo at localhost: grub-dev
+Started server on localhost: 3000
 
-						user=> system
-						{ :db-name "grub-dev"
-						:db #&lt;DBApiLayer grub-dev&gt;
-						:db-conn #&lt;MongoClient ...&gt;
-						:port 3000
-						:stop-server #&lt;clojure.lang.AFunction$1@7ed72ded&gt;,
-						:states #&lt;Atom@610863a9:
-						[{:tag 0
-						:grubs { :grub-167afa69-f812-455a-bb8a-4b819236011a
-						{:id "grub-167afa69-f812-455a-bb8a-4b819236011a"
-						:text "Milk"
-						:completed false}}}]&gt;}
-						user=> (reset! (:states system) [])
-						[]
-						user=> system
-						{ :db-name "grub-dev"
-						:db #&lt;DBApiLayer grub-dev&gt;
-						:db-conn #&lt;MongoClient ...&gt;
-						:port 3000
-						:stop-server #&lt;clojure.lang.AFunction$1@7ed72ded&gt;,
-						:states #&lt;Atom@610863a9: []&gt;}
+user=> system
+{:db-name "grub-dev"
+ :db #&lt;DBApiLayer grub-dev&gt;
+ :db-conn #&lt;MongoClient ...&gt;
+ :port 3000
+ :stop-server #&lt;clojure.lang.AFunction$1@7ed72ded&gt;,
+ :states #&lt;Atom@610863a9:
+   [{:tag 0
+     :grubs { :grub-167afa69-f812-455a-bb8a-4b819236011a
+                {:id "grub-167afa69-f812-455a-bb8a-4b819236011a"
+                 :text "Milk"
+                 :completed false}}}]&gt;}
+user=> (reset! (:states system) [])
+[]
+user=> system
+{ :db-name "grub-dev"
+  :db #&lt;DBApiLayer grub-dev&gt;
+  :db-conn #&lt;MongoClient ...&gt;
+  :port 3000
+  :stop-server #&lt;clojure.lang.AFunction$1@7ed72ded&gt;,
+  :states #&lt;Atom@610863a9: []&gt;}
 					</code></pre>
 			<small><a href="http://thinkrelevance.com/blog/2013/06/04/clojure-workflow-reloaded">(Stuart Sierra "Reloaded" workflow)</a></small>
 		</section>
 
 		<section>
-			<p>What can we do?</p>
+			<p>So how can we make Clojure <i>fast</i>?</p>
 		</section>
 
 		<section>
@@ -449,10 +512,42 @@ static {
 		</section>
 
 		<section data-background="white">
-			Hello world benchmark
+			Startup times
 			<div id="helloBenchmark" class="diagram" />
 		</section>
 
+		<section data-background="white">
+			Benchmark times
+			<div id="allBenchmarks" class="diagram" />
+		</section>
+
+		<section>
+			<h3>Conclusions</h3>
+			<ul>
+				<li class="fragment">Lean Clojure works</li>
+				<li class="fragment">...but it's not good enough</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>Where is Clojure on Android going?</h3>
+			Will I ever be able to use Clojure on Android?
+			<br/>
+			<br/>
+			Two paths:
+			<ul>
+				<li class="fragment">a) Clojure core developers push lean Clojure idea</li>
+				<li class="fragment">b) ClojureScript + wrapper framework (React Native?)</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>Practical takeaways</h3>
+			<ul>
+				<li class="fragment">Don't use Clojure on Android for startup-sensitive projects</li>
+				<li class="fragment">Unused "requires" kill your startup times</li>
+			</ul>
+		</section>
 	</div>
 
 </div>
