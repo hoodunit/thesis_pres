@@ -1,61 +1,24 @@
 (function() {
   function init(){
-    $('#startupOverallComparison').highcharts(startupOverallComparison);
+    $('#startupJvm').highcharts(makeDesktopStartupComparison(false));
+    $('#startupJvmAndDalvik').highcharts(makeDesktopStartupComparison(true));
+    $('#startupArt').highcharts(makeBenchmarksChart(times['hello'], true, false, 3000, false, false, true));
+    $('#startupOtherDevices').highcharts(makeBenchmarksChart(times['hello'], true, false, 3000, false, true, true));
+    $('#startupOtherAppsHello').highcharts(makeBenchmarksChart(times['hello'], true, false, 3000, false, false, true));
+    $('#startupOtherAppsDependencies').highcharts(makeBenchmarksChart(times['dependencies'], true, false, 3000, false, false, true));
     $('#bootstrappingTimes').highcharts(bootstrappingTimes);
     $('#dalvikBootstrappingTimes').highcharts(dalvikBootstrappingTimes);
-    $('#helloBenchmark').highcharts(makeBenchmarksChart(times['hello'], true, true));
-  }
+    $('#startupTimesNexus5dalvik').highcharts(makeStartupChart(times, true, 0));
+    $('#startupTimesNexus5art').highcharts(makeStartupChart(times, true, 1));
+    $('#startupTimesNexus7dalvik').highcharts(makeStartupChart(times, true, 2));
+    $('#startupTimesNexus7art').highcharts(makeStartupChart(times, true, 3));
 
-  var startupOverallComparison = {
-    chart: {
-      type: 'column'
-    },
-    title: {
-      text: ''
-    },
-    xAxis: {
-      categories: ['JVM', 'Dalvik'],
-      labels: {
-        style: {
-          fontSize: '16px'
-        }
-      },
-    },
-    yAxis: {
-      min: 0,
-      title: {
-        text: 'Run Time (ms)'
-      }
-    },
-    plotOptions: {
-      column: {
-        pointPadding: 0.2,
-        borderWidth: 0
-      },
-      series: {
-        dataLabels: {
-          enabled: true,
-          style: {
-            fontSize: "16px"
-          },
-        }
-      }
-    },
-    colors: ['blue', 'green', 'red', 'orange'],
-    series: [{
-      name: 'Java',
-      data: [42, 209]
-    }, {
-      name: 'Clojure',
-      data: [800, 1821]
-    }, {
-      name: 'Skummet',
-      data: [596.5, 808]
-    }, {
-      name: 'Oxcart',
-      data: [910.5]
-    }]
-  };
+    var benchmarks = ['hello', 'dependencies', 'binarytrees', 'fannkuchredux', 'nbody', 'pidigits', 'spectralnorm'];
+    benchmarks.forEach(function(benchmark) {
+      var divSelector = '#' + benchmark + 'Benchmark';
+      $(divSelector).highcharts(makeBenchmarksChart(times[benchmark], true, true));
+    })
+  }
 
   var bootstrappingTimes = {
     chart: {
@@ -77,7 +40,7 @@
           style: {
             color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
             fontSize: "16px"
-          },
+          }
         },
         innerSize: "50%",
         showInLegend: true
@@ -126,7 +89,7 @@
           style: {
             color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
             fontSize: "16px"
-          },
+          }
         },
         innerSize: "50%",
         showInLegend: true
@@ -163,7 +126,7 @@
       skummet: { startup: [732, 726, 937, 961],
                  task: [121, 169, 174, 222]},
       clojure: { startup: [1898, 1555, 2494, 2124],
-                 task: [121, 144, 171, 223]},
+                 task: [121, 144, 171, 223]}
     },
     binarytrees: {
       java: { startup: [131, 139, 171, 194],
@@ -171,7 +134,7 @@
       skummet: { startup: [782, 726, 950, 987],
                  task: [534, 340, 732, 407]},
       clojure: { startup: [1982, 1623, 2607, 2170],
-                 task: [607, 306, 838, 430]},
+                 task: [607, 306, 838, 430]}
     },
     fannkuchredux: {
       java: { startup: [162, 127, 161, 197],
@@ -179,7 +142,7 @@
       skummet: { startup: [883, 743, 978, 979],
                  task: [1255, 392, 1475, 546]},
       clojure: { startup: [2333, 1609, 2631, 2180],
-                 task: [1242, 377, 1182, 539]},
+                 task: [1242, 377, 1182, 539]}
     },
     nbody: {
       java: { startup: [203, 155, 171, 194],
@@ -187,7 +150,7 @@
       skummet: { startup: [874, 662, 975, 1015],
                  task: [2330, 482, 2579, 775]},
       clojure: { startup: [2351, 1606, 2584, 2195],
-                 task: [1774, 534, 1930, 749]},
+                 task: [1774, 534, 1930, 749]}
     },
     pidigits: {
       java: { startup: [210, 162, 167, 187],
@@ -195,7 +158,7 @@
       skummet: { startup: [924, 839, 959, 968],
                  task: [4381, 3070, 5223, 3823]},
       clojure: { startup: [2598, 1848, 2593, 2174],
-                 task: [4969, 3042, 5437, 3865]},
+                 task: [4969, 3042, 5437, 3865]}
     },
     spectralnorm: {
       java: { startup: [240, 180, 161, 191],
@@ -203,7 +166,7 @@
       skummet: { startup: [1207, 861, 969, 979],
                  task: [4112, 1838, 3768, 1840]},
       clojure: { startup: [3003, 2291, 2620, 2160],
-                 task: [2805, 2092, 2552, 1763]},
+                 task: [2805, 2092, 2552, 1763]}
     },
     dependencies: {
       java: { startup: [160, 178, 170, 195],
@@ -211,9 +174,56 @@
       skummet: { startup: [962, 979, 1223, 1193],
                  task: [161, 216, 227, 295]},
       clojure: { startup: [2687, 1964, 3673, 2716],
-                 task: [157, 196, 262, 305]},
+                 task: [157, 196, 262, 305]}
     }
   };
+
+  var platformNames = ['Nexus 5 Dalvik', 'Nexus 5 ART', 'Nexus 7 Dalvik', 'Nexus 7 ART'];
+
+  function makeDesktopStartupComparison(includeDalvik) {
+    var series = includeDalvik ? [ { name: 'Clojure', data: [800, 1821] }, { name: 'Java', data: [42, 209] } ] : [ { name: 'Clojure', data: [800] }, { name: 'Java', data: [42] } ];
+    return {
+      chart: {
+        type: 'bar'
+      },
+      title: {
+        text: ''
+      },
+      legend: {
+        reversed: true
+      },
+      xAxis: {
+        categories: ['Nexus 5 JVM', 'Nexus 5 Dalvik'],
+        labels: {
+          style: {
+            fontSize: '16px'
+          }
+        }
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: 'Run Time (ms)'
+        }
+      },
+      plotOptions: {
+        column: {
+          pointPadding: 0.2,
+          borderWidth: 0
+        },
+        series: {
+          dataLabels: {
+            enabled: true,
+            style: {
+              fontSize: "16px"
+            }
+          }
+        }
+      },
+      colors: ['green', 'red'],
+      series: series
+    };
+  }
 
   function makeStartupChart(times, isStartup, index){
     var max = 4000;
@@ -263,11 +273,12 @@
     console.log('series:', series);
     return {
       chart: {
-        type: 'bar',
+        type: 'bar'
       },
       series: series,
       title: {
-        text: ''
+        text: platformNames[index],
+        style: { fontWeight: 'bold' }
       },
       xAxis: {
         categories: ['hello', 'dependencies', 'binarytrees', 'fannkuchredux', 'nbody', 'pidigits', 'spectralnorm'],
@@ -290,7 +301,7 @@
         },
         tickColor: 'black',
         lineColor: 'black',
-        gridLineColor: 'black',
+        gridLineColor: 'black'
       },
       legend: {
         enabled: true,
@@ -298,10 +309,7 @@
         itemStyle: {
           fontSize: textStyle.fontSize
         },
-        itemDistance: 30,
-        margin: 15,
-        x: 55,
-        verticalAlign: 'top'
+        margin: 0
       },
       plotOptions: {
         series: {
@@ -319,44 +327,61 @@
     }
   };
 
-  function makeBenchmarksChart(times, includeStartup, includeTask, max){
+  function makeBenchmarksChart(times, includeStartup, includeTask, max, _includeSkummet, _includeNexus7, _includeLegend){
+    var includeSkummet = typeof _includeSkummet === 'undefined' ? true : _includeSkummet;
+    var includeNexus7 = typeof _includeNexus7 === 'undefined' ? true : _includeNexus7;
+    var includeLegend = typeof _includeLegend === 'undefined' ? false : _includeLegend;
+    console.log('includeSkummet: ', includeSkummet);
+    console.log('includeNexus7: ', includeNexus7);
     var javaStartup = {
       name: 'Java Startup',
       stack: 'Java',
-      data: times.java.startup
-    }
+      data: includeNexus7 ? times.java.startup : _.dropRight(times.java.startup, 2)
+    };
     var javaTask = {
       name: 'Java Task',
       stack: 'Java',
-      data: times.java.task
+      data: includeNexus7 ? times.java.task : _.dropRight(times.java.task, 2)
     }
     var skummetStartup = {
       name: 'Skummet Startup',
       stack: 'Skummet',
-      data: times.skummet.startup
+      data: includeNexus7 ? times.skummet.startup : _.dropRight(times.skummet.startup, 2)
     };
     var skummetTask = {
       name: 'Skummet Task',
       stack: 'Skummet',
-      data: times.skummet.task
+      data: includeNexus7 ? times.skummet.task : _.dropRight(times.skummet.task, 2)
     };
     var clojureStartup = {
       name: 'Clojure Startup',
       stack: 'Clojure',
-      data: times.clojure.startup
+      data: includeNexus7 ? times.clojure.startup : _.dropRight(times.clojure.startup, 2)
     };
     var clojureTask = {
       name: 'Clojure Task',
       stack: 'Clojure',
-      data: times.clojure.task
+      data: includeNexus7 ? times.clojure.task : _.dropRight(times.clojure.task, 2)
     };
     var series;
     if(includeStartup && includeTask) {
-      series = [clojureTask, clojureStartup, skummetTask, skummetStartup, javaTask, javaStartup]
+      if(includeSkummet) {
+        series = [clojureTask, clojureStartup, skummetTask, skummetStartup, javaTask, javaStartup]
+      } else {
+        series = [clojureTask, clojureStartup, javaTask, javaStartup]
+      }
     } else if(includeStartup) {
-      series = [clojureStartup, skummetStartup, javaStartup];
+      if(includeSkummet) {
+        series = [clojureStartup, skummetStartup, javaStartup];
+      } else {
+        series = [clojureStartup, javaStartup];
+      }
     } else if(includeTask) {
-      series = [clojureTask, skummetTask, javaTask];
+      if(includeSkummet) {
+        series = [clojureTask, skummetTask, javaTask];
+      } else {
+        series = [clojureTask, javaTask];
+      }
     } else {
       series = {};
     }
@@ -364,9 +389,10 @@
       fontSize: '14px',
       color: 'black'
     };
+    var categories = includeNexus7 ? ['Nexus 5 Dalvik', 'Nexus 5 ART', 'Nexus 7 Dalvik', 'Nexus 7 ART'] : ['Nexus 5 Dalvik', 'Nexus 5 ART'];
     return {
       chart: {
-        type: 'bar',
+        type: 'bar'
         // marginBottom: 70,
         //spacingBottom: 0
       },
@@ -374,7 +400,7 @@
         text: ''
       },
       xAxis: {
-        categories: ['Nexus 5 Dalvik', 'Nexus 5 ART', 'Nexus 7 Dalvik', 'Nexus 7 ART'],
+        categories: categories,
         tickColor: 'black',
         lineColor: 'black',
         gridLineColor: 'black',
@@ -394,10 +420,11 @@
         },
         tickColor: 'black',
         lineColor: 'black',
-        gridLineColor: 'black',
+        gridLineColor: 'black'
       },
       legend: {
         reversed: true,
+        enabled: includeLegend
       },
       plotOptions: {
         series: {
