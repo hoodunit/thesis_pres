@@ -2,10 +2,14 @@
   function init(){
     $('#startupJvm').highcharts(makeDesktopStartupComparison(false));
     $('#startupJvmAndDalvik').highcharts(makeDesktopStartupComparison(true));
-    $('#startupArt').highcharts(makeBenchmarksChart(times['hello'], true, false, 3000, false, false, true));
-    $('#startupOtherDevices').highcharts(makeBenchmarksChart(times['hello'], true, false, 3000, false, true, true));
-    $('#startupOtherAppsHello').highcharts(makeBenchmarksChart(times['hello'], true, false, 3000, false, false, true));
-    $('#startupOtherAppsDependencies').highcharts(makeBenchmarksChart(times['dependencies'], true, false, 3000, false, false, true));
+    $('#startupArt').highcharts(makeBenchmarksChart(times['hello'],
+      {includeStartup: true, includeTask: false, max: 3000, includeSkummet: false, includeNexus7: false, includeLegend: true}));
+    $('#startupOtherDevices').highcharts(makeBenchmarksChart(times['hello'],
+      {includeStartup: true, includeTask: false, max: 3000, includeSkummet: false, includeNexus7: true, includeLegend: true}));
+    $('#startupOtherAppsHello').highcharts(makeBenchmarksChart(times['hello'],
+      {includeStartup: true, includeTask: false, max: 3000, includeSkummet: false, includeNexus7: false, includeLegend: true}));
+    $('#startupOtherAppsDependencies').highcharts(makeBenchmarksChart(times['dependencies'],
+      {includeStartup: true, includeTask: false, max: 3000, includeSkummet: false, includeNexus7: false, includeLegend: true}));
     $('#bootstrappingTimes').highcharts(bootstrappingTimes);
     $('#dalvikBootstrappingTimes').highcharts(dalvikBootstrappingTimes);
     $('#startupTimesNexus5dalvik').highcharts(makeStartupChart(times, true, 0));
@@ -16,7 +20,10 @@
     var benchmarks = ['hello', 'dependencies', 'binarytrees', 'fannkuchredux', 'nbody', 'pidigits', 'spectralnorm'];
     benchmarks.forEach(function(benchmark) {
       var divSelector = '#' + benchmark + 'Benchmark';
-      $(divSelector).highcharts(makeBenchmarksChart(times[benchmark], true, true));
+      $(divSelector).highcharts(makeBenchmarksChart(times[benchmark],
+        {includeStartup: true, includeTask: true, title: benchmark}));
+      $(divSelector + '2').highcharts(makeBenchmarksChart(times[benchmark],
+        {includeStartup: true, includeTask: true, title: benchmark}));
     })
   }
 
@@ -220,7 +227,7 @@
           }
         }
       },
-      colors: ['green', 'red'],
+      colors: ['blue', 'red'],
       series: series
     };
   }
@@ -270,7 +277,6 @@
           ]
         },
       ];
-    console.log('series:', series);
     return {
       chart: {
         type: 'bar'
@@ -327,57 +333,66 @@
     }
   };
 
-  function makeBenchmarksChart(times, includeStartup, includeTask, max, _includeSkummet, _includeNexus7, _includeLegend){
-    var includeSkummet = typeof _includeSkummet === 'undefined' ? true : _includeSkummet;
-    var includeNexus7 = typeof _includeNexus7 === 'undefined' ? true : _includeNexus7;
-    var includeLegend = typeof _includeLegend === 'undefined' ? false : _includeLegend;
-    console.log('includeSkummet: ', includeSkummet);
-    console.log('includeNexus7: ', includeNexus7);
+  function makeBenchmarksChart(times, options) {
+    var optionsWithDefaults = {
+      includeStartup: valueOrDefault(options.includeStartup, true),
+      includeTask: valueOrDefault(options.includeTask, true),
+      includeSkummet: valueOrDefault(options.includeSkummet, true),
+      max: valueOrDefault(options.max, undefined),
+      includeNexus7: valueOrDefault(options.includeNexus7, true),
+      includeLegend: valueOrDefault(options.includeLegend, false),
+      includeAxisTitle: valueOrDefault(options.includeAxisTitle, true),
+      title: valueOrDefault(options.title, '')
+    };
+    return _makeBenchmarksChart(times, optionsWithDefaults);
+  }
+
+  function _makeBenchmarksChart(times, options){
     var javaStartup = {
       name: 'Java Startup',
       stack: 'Java',
-      data: includeNexus7 ? times.java.startup : _.dropRight(times.java.startup, 2)
+      data: options.includeNexus7 ? times.java.startup : _.dropRight(times.java.startup, 2)
     };
     var javaTask = {
       name: 'Java Task',
       stack: 'Java',
-      data: includeNexus7 ? times.java.task : _.dropRight(times.java.task, 2)
+      data: options.includeNexus7 ? times.java.task : _.dropRight(times.java.task, 2)
     }
     var skummetStartup = {
       name: 'Skummet Startup',
       stack: 'Skummet',
-      data: includeNexus7 ? times.skummet.startup : _.dropRight(times.skummet.startup, 2)
+      data: options.includeNexus7 ? times.skummet.startup : _.dropRight(times.skummet.startup, 2)
     };
     var skummetTask = {
       name: 'Skummet Task',
       stack: 'Skummet',
-      data: includeNexus7 ? times.skummet.task : _.dropRight(times.skummet.task, 2)
+      data: options.includeNexus7 ? times.skummet.task : _.dropRight(times.skummet.task, 2)
     };
     var clojureStartup = {
       name: 'Clojure Startup',
       stack: 'Clojure',
-      data: includeNexus7 ? times.clojure.startup : _.dropRight(times.clojure.startup, 2)
+      data: options.includeNexus7 ? times.clojure.startup : _.dropRight(times.clojure.startup, 2)
     };
     var clojureTask = {
       name: 'Clojure Task',
       stack: 'Clojure',
-      data: includeNexus7 ? times.clojure.task : _.dropRight(times.clojure.task, 2)
+      data: options.includeNexus7 ? times.clojure.task : _.dropRight(times.clojure.task, 2)
     };
     var series;
-    if(includeStartup && includeTask) {
-      if(includeSkummet) {
+    if(options.includeStartup && options.includeTask) {
+      if(options.includeSkummet) {
         series = [clojureTask, clojureStartup, skummetTask, skummetStartup, javaTask, javaStartup]
       } else {
         series = [clojureTask, clojureStartup, javaTask, javaStartup]
       }
-    } else if(includeStartup) {
-      if(includeSkummet) {
+    } else if(options.includeStartup) {
+      if(options.includeSkummet) {
         series = [clojureStartup, skummetStartup, javaStartup];
       } else {
         series = [clojureStartup, javaStartup];
       }
-    } else if(includeTask) {
-      if(includeSkummet) {
+    } else if(options.includeTask) {
+      if(options.includeSkummet) {
         series = [clojureTask, skummetTask, javaTask];
       } else {
         series = [clojureTask, javaTask];
@@ -389,15 +404,27 @@
       fontSize: '14px',
       color: 'black'
     };
-    var categories = includeNexus7 ? ['Nexus 5 Dalvik', 'Nexus 5 ART', 'Nexus 7 Dalvik', 'Nexus 7 ART'] : ['Nexus 5 Dalvik', 'Nexus 5 ART'];
+    var categories = options.includeNexus7 ? ['Nexus 5 Dalvik', 'Nexus 5 ART', 'Nexus 7 Dalvik', 'Nexus 7 ART'] : ['Nexus 5 Dalvik', 'Nexus 5 ART'];
+    var colors;
+    if(options.includeStartup && options.includeTask){
+      if(options.includeSkummet){
+        colors = ['lightblue', 'blue', 'lightgreen', 'green', 'lightpink', 'red'];
+      } else {
+        colors = ['lightblue', 'blue', 'lightpink', 'red'];
+      }
+    } else {
+      if(options.includeSkummet){
+        colors = ['blue', 'green', 'red'];
+      } else {
+        colors = ['blue', 'red'];
+      }
+    }
     return {
       chart: {
-        type: 'bar'
-        // marginBottom: 70,
-        //spacingBottom: 0
+        type: 'bar',
       },
       title: {
-        text: ''
+        text: options.title
       },
       xAxis: {
         categories: categories,
@@ -408,10 +435,11 @@
       },
       yAxis: {
         min: 0,
-        max: max,
+        max: options.max,
         title: {
           text: 'Run Time (ms)',
-          style: textStyle
+          style: textStyle,
+          enabled: options.includeXAxisTitle
         },
         labels: {
           // Remove abbreviation of 1000 with k
@@ -424,7 +452,7 @@
       },
       legend: {
         reversed: true,
-        enabled: includeLegend
+        enabled: options.includeLegend
       },
       plotOptions: {
         series: {
@@ -439,12 +467,14 @@
           borderWidth: 2
         }
       },
-      colors: ((includeStartup && includeTask) ?
-               ['lightblue', 'blue', 'lightgreen', 'green', 'lightpink', 'red'] :
-               ['blue', 'green', 'red']),
+      colors: colors,
       series: series
     }
   };
-  
+
+  function valueOrDefault(value, defaultValue){
+    return typeof value !== 'undefined' ? value : defaultValue;
+  }
+
   init();
 })();

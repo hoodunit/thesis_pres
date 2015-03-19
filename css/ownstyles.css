@@ -29,8 +29,9 @@
 }
 
 .reveal div.diagram {
-    width: 800px;
-    height: 400px;
+    width: 100%;
+    /*width: 800px;*/
+    /*height: 400px;*/
     margin: 0 auto;
 }
 
@@ -44,10 +45,14 @@
 .reveal div.diagram-benchmark {
     display: inline-block;
     width: 400px;
-    height: 200px;
+    height: 160px;
     margin: 0 auto;
 }
 
 .reveal pre code {
     max-height: none;
+}
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+    text-transform: none;
 }
