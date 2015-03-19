@@ -200,7 +200,7 @@
         reversed: true
       },
       xAxis: {
-        categories: ['Nexus 5 JVM', 'Nexus 5 Dalvik'],
+        categories: ['Desktop JVM', 'Nexus 5 Dalvik'],
         labels: {
           style: {
             fontSize: '16px'
