@@ -459,8 +459,7 @@ Hello world
 
 (defn -main [& args]
   (let [users-json (fetch-users)]
-    (rxb/doseq [user users-json]
-    (println user))))
+    (rxb/doseq [user users-json] (println user))))
 			</code></pre>
             </section>
 		</section>
