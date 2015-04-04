@@ -49,6 +49,10 @@
     margin: 0 auto;
 }
 
+.reveal pre {
+    width: 100%;
+}
+
 .reveal pre code {
     max-height: none;
 }

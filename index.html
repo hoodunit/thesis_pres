@@ -41,56 +41,120 @@
 
 		<section>
 			<h1>Clojure on Android</h1>
-			<p>
-				Nicholas Kariniemi
-			</p>
+			<h2>Challenges and Solutions</h2>
 			<img class="normal-image" data-src="img/clojure_android.png" />
+			<p>
+				Nicholas Kariniemi<br/>
+				Master's Thesis<br/>
+				Aalto University 2015.4.10
+			</p>
 			<br/>
-			Reaktor 2015.3.19
+		</section>
+
+		<section>
+			<h3>What I'm talking about</h3>
+			<ul>
+				<li class="fragment">Why Clojure on Android?</li>
+				<li class="fragment">Why not Clojure on Android?</li>
+				<ul>
+					<li class="fragment">Benchmarking: slow startup</li>
+					<li class="fragment">Why slow startup?</li>
+				</ul>
+				<li class="fragment">Lean Clojure on Android</li>
+				<li class="fragment">Lean Clojure performance</li>
+				<li class="fragment">Conclusions</li>
+			</ul>
 		</section>
 
 		<section>
 			<h3>Why Clojure on Android?</h3>
 		</section>
 
-        <section data-background="img/swift.jpg">
+		<section>
+			<h3>Why Android?</h3>
+			<ul>
+				<li class="fragment">Most widely used mobile OS</li>
+				<li class="fragment">Likely to grow with Internet of Things</li>
+			</ul>
+		</section>
+
+        <section data-transition="slide" data-background="#b5533c" data-background-transition="zoom">
 			<br/>
-			<h3>iOS</h3>
-			<br/>
-			<br/>
-			<br/>
-			<br/>
-			<br/>
-			<br/>
-			<br/>
+			<h1>iOS</h1>
+			<img class="normal-image" data-src="img/swift_logo.png" />
+			<h2>Swift</h2>
 			<small><blockquote>
 				Swift is an innovative new programming language for Cocoa and Cocoa Touch. Writing code is interactive and fun, the syntax is concise yet expressive, and apps run lightning-fast. Swift is ready for your next iOS and OS X project — or for addition into your current app — because Swift code works side-by-side with Objective-C.
 			</blockquote></small>
 		</section>
 
-		<section data-background="#333333">
+        <section data-transition="slide" data-background="#333333" data-background-transition="zoom">
 			<br/>
-			<br/>
-			<br/>
-
-			<h3>Windows Phone</h3>
+			<h1>Windows Phone</h1>
 			<div style="font-size: 180px; color: #30B9DB">F#</div>
 			<small><blockquote>
 				F# is a mature, open source, cross-platform, functional-first programming language. It empowers users and organizations to tackle complex computing problems with simple, maintainable and robust code.
 			</blockquote></small>
 		</section>
 
-		<section data-background="white">
-			<h4>Android</h4>
+        <section data-transition="slide" data-background="white" data-background-transition="zoom">
 			<br/>
+			<h1>Android</h1>
 			<img class="normal-image" data-src="img/java7.jpg" />
 			<small><blockquote>
 			</blockquote></small>
 		</section>
 
 		<section>
+			<h4>Android development still uses an outdated language.</h4>
+			<h4 class="fragment">There are no officially-supported alternatives.</h4>
+		</section>
+
+		<section>
+			<h4>What about <span style="color: #42affa;">Clojure</span>?</h4>
+		</section>
+
+		<section>
+			<h2><span style="color: #42affa;">Clojure</span> in a nutshell</h2>
+			<ul>
+				<span class="fragment">
+				<li>Functional</li>
+			<pre><code data-trim>
+(def add-one (fn [val] (+ val 1)))
+
+(-> [1 2 3 4 5 6]
+    (map add-one)
+    (filter even?)
+    (take 2))
+;; => (2 4)
+			</code></pre>
+					</span>
+				<li class="fragment">Dynamic</li>
+				<li class="fragment">Lisp</li>
+				<li class="fragment">Good concurrency support</li>
+				<li class="fragment">Runs on JVM</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3><span style="color: #42affa;">Why Clojure?</span> It works well with Java</h3>
+			<pre><code data-trim>
+(ns com.android.helloworld.HelloWorld
+  (:gen-class
+   :extends android.app.Activity
+   :exposes-methods {onCreate superOnCreate})
+  (:import [android.app Activity]
+           [android.os Bundle]))
+
+(defn -onCreate [this #^android.os.Bundle bundle]
+  (.superOnCreate this bundle)
+  (.setContentView this com.android.helloworld.R$layout/main))
+			</code></pre>
+		</section>
+
+		<section>
             <section>
-			<h4>Why Clojure on Android? Functional goodness</h4>
+			<h3><span style="color: #42affa;">Why Clojure?</span> Functional goodness</h3>
 			<pre><code data-trim>
 (defn fetch-users []
   (->> users
@@ -103,6 +167,7 @@
 			</section>
 
 			<section>
+				<h3>Android Java equivalent</h3>
 				<small>
 			<pre style="width: 100%;"><code java data-trim>
 public static Observable fetchUsers(){
@@ -137,7 +202,7 @@ public static Observable fetchUsers(){
 
 		<section>
 			<section>
-			<h3>Why Clojure on Android? Data as code</h3>
+			<h3><span style="color: #42affa;">Why Clojure?</span> Data as code</h3>
             <code><pre>
 (def main-view
     [:linear-layout {:orientation :vertical}
@@ -192,21 +257,20 @@ public static Observable fetchUsers(){
 		</section>
 
 		<section>
-			<h3>Why Clojure on Android?</h3>
+			<h3><span style="color: #42affa;">Why Clojure?</span></h3>
 			<ul>
-				<li>Concurrency: STM, core.async</li>
-				<li>Persistent data structures</li>
-				<li>Dynamic development</li>
-				<li>Etc, etc.</li>
+				<li class="fragment">Immutability as default + immutable data structures</li>
+				<li class="fragment">Sensible concurrency: STM, core.async</li>
+				<li class="fragment">Dynamic development (more on this later)</li>
 			</ul>
         </section>
 
 		<section>
-			OK, so Clojure on Android is awesome. Let's use it!
+			OK, Clojure is awesome. Let's use it on Android!
 		</section>
 
 		<section>
-			Hello Clojure on Android!
+			Hello Clojure on Android
 			<pre><code data-trim>
 (ns com.android.helloworld.HelloWorld
   (:gen-class
@@ -468,11 +532,6 @@ Hello world
 			<h1>Conclusion</h1>
 			<div class="fragment">Clojure startup time is a huge problem.</div>
 			<div class="fragment"><span style="color: red;">Clojure</span> is the cause.</span></div>
-		</section>
-
-		<section>
-			<p>Or in other words:</p>
-			<h3 class="fragment">Stop calling it JVM startup time, people</h3>
 		</section>
 
 		<section>
@@ -822,29 +881,13 @@ user=> system
 			<span class="fragment">Yes, if:</span>
 			<ul>
 				<li class="fragment">a) You don't care about startup time &rarr; use Clojure (now)</li>
-				<li class="fragment">b) Clojure core developers jump on lean Clojure idea &rarr; use new lean Clojure (sometime)</li>
+				<li class="fragment">b) Motivated developer(s) continue lean Clojure idea &rarr; use new lean Clojure (sometime)</li>
 				<li class="fragment">c) ClojureScript + wrapper framework (React Native?) &rarr; use ClojureScript (soon)</li>
 			</ul>
 		</section>
 
 		<section>
-			<h3>Practical takeaways?</h3>
-			<ul>
-				<li class="fragment">Don't use Clojure on Android for startup-sensitive projects</li>
-				<li class="fragment">Unused "requires" kill your startup times</li>
-			</ul>
-		</section>
-
-		<section>
 			<h3>Thank you</h3>
-		</section>
-
-		<section>
-			The gory details of the thesis:<br/>
-			http://goo.gl/wPMcjC
-			<br/>
-			<img class="normal-image" data-src="img/thesis_qr_code.png" />
-			<h3>Comments?</h3>
 		</section>
 	</div>
 
