@@ -41,7 +41,6 @@
 
 		<section>
 			<h1>Clojure on Android</h1>
-			<h2>Challenges and Solutions</h2>
 			<img class="normal-image" data-src="img/clojure_android.png" />
 			<p>
 				Nicholas Kariniemi<br/>
@@ -54,11 +53,11 @@
 		<section>
 			<h3>What I'm talking about</h3>
 			<ul>
-				<li class="fragment">Why Clojure on Android?</li>
-				<li class="fragment">Why not Clojure on Android?</li>
+				<li class="fragment">The <span class="green">Why</span> of Clojure on Android</li>
+				<li class="fragment">The <span class="red">Why Not</span> of Clojure on Android</li>
 				<ul>
-					<li class="fragment">Benchmarking: slow startup</li>
-					<li class="fragment">Why slow startup?</li>
+					<li class="fragment">Benchmarking results</li>
+					<li class="fragment">Explanation</li>
 				</ul>
 				<li class="fragment">Lean Clojure on Android</li>
 				<li class="fragment">Lean Clojure performance</li>
@@ -106,38 +105,21 @@
 		</section>
 
 		<section>
-			<h4>Android development still uses an outdated language.</h4>
+			<h4>Android development uses an outdated language.</h4>
 			<h4 class="fragment">There are no officially-supported alternatives.</h4>
 		</section>
 
 		<section>
-			<h4>What about <span style="color: #42affa;">Clojure</span>?</h4>
+			<h4>What about <span class="blue">Clojure</span>?</h4>
 		</section>
 
 		<section>
-			<h2><span style="color: #42affa;">Clojure</span> in a nutshell</h2>
-			<ul>
-				<span class="fragment">
-				<li>Functional</li>
-			<pre><code data-trim>
-(def add-one (fn [val] (+ val 1)))
-
-(-> [1 2 3 4 5 6]
-    (map add-one)
-    (filter even?)
-    (take 2))
-;; => (2 4)
-			</code></pre>
-					</span>
-				<li class="fragment">Dynamic</li>
-				<li class="fragment">Lisp</li>
-				<li class="fragment">Good concurrency support</li>
-				<li class="fragment">Runs on JVM</li>
-			</ul>
+			<h2><span class="blue">Clojure:</span>
+				<span class="fragment"> a functional</span><span class="fragment">, dynamic</span><span class="fragment">, Lisp</span><span class="fragment"> with good concurrency support</span><span class="fragment"> that runs on the JVM</span></h2>
 		</section>
 
 		<section>
-			<h3><span style="color: #42affa;">Why Clojure?</span> It works well with Java</h3>
+			<h3><span class="blue">Why Clojure?</span> It works well with Java</h3>
 			<pre><code data-trim>
 (ns com.android.helloworld.HelloWorld
   (:gen-class
@@ -154,7 +136,7 @@
 
 		<section>
             <section>
-			<h3><span style="color: #42affa;">Why Clojure?</span> Functional goodness</h3>
+			<h3><span class="blue">Why Clojure?</span> Functional goodness</h3>
 			<pre><code data-trim>
 (defn fetch-users []
   (->> users
@@ -202,7 +184,7 @@ public static Observable fetchUsers(){
 
 		<section>
 			<section>
-			<h3><span style="color: #42affa;">Why Clojure?</span> Data as code</h3>
+			<h3><span class="blue">Why Clojure?</span> Data as code</h3>
             <code><pre>
 (def main-view
     [:linear-layout {:orientation :vertical}
@@ -257,7 +239,7 @@ public static Observable fetchUsers(){
 		</section>
 
 		<section>
-			<h3><span style="color: #42affa;">Why Clojure?</span></h3>
+			<h3><span class="blue">Why Clojure?</span></h3>
 			<ul>
 				<li class="fragment">Immutability as default + immutable data structures</li>
 				<li class="fragment">Sensible concurrency: STM, core.async</li>

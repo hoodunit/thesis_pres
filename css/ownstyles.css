@@ -60,3 +60,19 @@
 .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
     text-transform: none;
 }
+
+.blue {
+    color: #42affa;
+}
+
+.green {
+    color: green;
+}
+
+.red {
+    color: #b5301f;
+}
+
+.light-red {
+    color: #b5533c;
+}
