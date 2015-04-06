@@ -42,7 +42,7 @@
 		<section>
 			<h1>Clojure on Android</h1>
 			<h3>Nicholas Kariniemi</h3>
-			<img class="normal-image" data-src="img/clojure_android.png" />
+			<img class="normal-image" data-src="img/clojure_plus_android.png" />
 			<p>
 				Master's Thesis<br/>
 				Aalto University 2015.4.10 <br/>
@@ -63,8 +63,11 @@
 					<li class="fragment">Explanation</li>
 				</ul>
 				<li class="fragment">Lean Clojure on Android</li>
-				<li class="fragment">Lean Clojure performance</li>
-				<li class="fragment">Conclusions</li>
+				<ul>
+                    <li class="fragment">The Big Idea</li>
+					<li class="fragment">Benchmarking results</li>
+                </ul>
+				<li class="fragment">Conclusions: The State of Clojure on Android</li>
 			</ul>
 		</section>
 
@@ -78,6 +81,7 @@
 				<li class="fragment">Most widely used mobile OS</li>
 				<li class="fragment">Likely to grow with Internet of Things</li>
 			</ul>
+			<img class="normal-image" data-src="img/android_logo.png" />
 		</section>
 
         <section data-transition="slide" data-background="#b5533c" data-background-transition="zoom">
@@ -107,18 +111,19 @@
 			</blockquote></small>
 		</section>
 
-		<section>
+		<section data-background="white">
 			<h4>Android development uses an outdated language.</h4>
 			<h4 class="fragment">There are no officially-supported alternatives.</h4>
 		</section>
 
-		<section>
-			<h4>What about <span class="blue">Clojure</span>?</h4>
+        <section data-transition="slide" data-background-color="#222222" data-background-transition="zoom">
+			<h3>How about <span class="blue">Clojure</span>?</h3>
+			<img style="width: 30%" class="normal-image" data-src="img/clojure_logo.png" />
 		</section>
 
 		<section>
-			<h2><span class="blue">Clojure:</span>
-				<span class="fragment"> a functional</span><span class="fragment">, dynamic</span><span class="fragment">, Lisp</span><span class="fragment"> with good concurrency support</span><span class="fragment"> that runs on the JVM</span></h2>
+			<h2><span class="blue">Clojure</span>
+				<span class="fragment">: a functional</span><span class="fragment">, dynamic</span><span class="fragment">, Lisp</span><span class="fragment"> with good concurrency support</span><span class="fragment"> that runs on the JVM</span></h2>
 		</section>
 
 		<section>
@@ -126,7 +131,7 @@
         </section>
 
 		<section>
-			<h4><span class="blue">Why Clojure on Android?</span> It works well with Java</h4>
+			<h4><span class="blue">Why Clojure on Android?</span> Clojure plays nice with Java</h4>
 			<pre><code data-trim>
 (ns com.android.helloworld.HelloWorld
   (:gen-class
@@ -139,8 +144,10 @@
   (.superOnCreate this bundle)
   (.setContentView this com.android.helloworld.R$layout/main))
 			</code></pre>
-			<p class="fragment">Clojure compiles to JVM bytecode like Java</p>
-			<p class="fragment">and it has good interop with Java</p>
+			<ul>
+				<li class="fragment">Clojure compiles to JVM bytecode like Java</li>
+				<li class="fragment">and has good interop with Java</li>
+			</ul>
 		</section>
 
 		<section>
@@ -158,7 +165,7 @@
 			</section>
 
 			<section>
-				<h3>Android Java equivalent</h3>
+				<h3>Android Java: Verbose anonymous classes</h3>
 				<small>
 			<pre style="width: 100%;"><code java data-trim>
 public static Observable fetchUsers(){
@@ -215,6 +222,8 @@ public static Observable fetchUsers(){
 			</code></pre>
 				</section>
 			<section>
+				<h4>Android Java: XML + extended Java classes</h4>
+				<small>
 				<code><pre>
 &lt;FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			 android:id="@+id/contactinfoview"
@@ -243,7 +252,7 @@ public static Observable fetchUsers(){
 						android:layout_width="140dp"
 						android:layout_height="114dp">
 					...
-				</code></pre>
+				</code></pre></small>
 			</section>
 		</section>
 
@@ -252,7 +261,7 @@ public static Observable fetchUsers(){
 			<ul>
 				<li class="fragment">Immutability as default + immutable data structures</li>
 				<li class="fragment">Sensible concurrency: STM, core.async</li>
-				<li class="fragment">Dynamic development (more on this later)</li>
+				<li class="fragment">Dynamic development</li>
 			</ul>
         </section>
 
@@ -373,8 +382,50 @@ public static Observable fetchUsers(){
 			Let's benchmark it.
 		</section>
 
+		<section>
+		<section>
+			<h3>Hello World benchmark</h3>
+			<pre><code data-trim>
+(ns com.android.helloworld.HelloWorld
+  (:gen-class
+   :extends android.app.Activity
+   :exposes-methods {onCreate superOnCreate})
+  (:import [android.app Activity]
+           [android.os Bundle]))
+
+(defn -onCreate [this #^android.os.Bundle bundle]
+  (.superOnCreate this bundle)
+  (.setContentView this com.android.helloworld.R$layout/main))
+			</code></pre>
+			<ul>
+				<li class="fragment">Displays a text field with "Hello world"</li>
+				<li class="fragment">i.e. does almost nothing</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>Hello World benchmark</h3>
+			<pre><code data-trim>
+				(ns com.android.helloworld.HelloWorld
+				(:gen-class
+				:extends android.app.Activity
+				:exposes-methods {onCreate superOnCreate})
+				(:import [android.app Activity]
+				[android.os Bundle]))
+
+				(defn -onCreate [this #^android.os.Bundle bundle]
+				(.superOnCreate this bundle)
+				(.setContentView this com.android.helloworld.R$layout/main))
+			</code></pre>
+			<ul>
+				<li class="fragment">Displays a text field with "Hello world"</li>
+				<li class="fragment">i.e. does almost nothing</li>
+			</ul>
+		</section>
+        </section>
+
 		<section data-background="white">
-			<p>Hello world takes 9x longer to start using Clojure vs Java</p>
+			<h3>Hello world benchmark: JVM vs Dalvik</h3>
 			<div id="startupJvmAndDalvik" class="diagram" />
 		</section>
 
@@ -385,7 +436,7 @@ public static Observable fetchUsers(){
 		</section>
 
 		<section data-background="white">
-			<p>ART is a bit faster</p>
+			<h3>Hello world benchmark: Dalvik vs ART</h3>
 			<div id="startupArt" class="diagram"></div>
 		</section>
 
@@ -394,7 +445,7 @@ public static Observable fetchUsers(){
 		</section>
 
 		<section data-background="white">
-			<p>Sure, a little:</p>
+			<h3>Hello world benchmark: Nexus 5 vs Nexus 7</h3>
 			<div id="startupOtherDevices" class="diagram"></div>
 		</section>
 
@@ -404,13 +455,14 @@ public static Observable fetchUsers(){
 
 		<section>
 			<section data-background="white">
-			<p>Larger apps start much slower:</p>
+            <h3>Hello vs Dependencies benchmark</h3>
 			Hello benchmark:
 			<div id="startupOtherAppsHello" class="diagram" style="height: 25%"></div>
 			Dependencies benchmark:
 			<div id="startupOtherAppsDependencies" class="diagram" style="height: 25%"></div>
 			</section>
             <section>
+            <h3>Dependencies benchmark</h3>
 			<code data-trim><pre>
 (ns benchmark.dependencies
   (:gen-class)
@@ -447,7 +499,7 @@ public static Observable fetchUsers(){
 		<section>
 			<h3>Summary</h3>
 			<ul>
-				<li class="fragment">Clojure on Android starts slowly (2s minimum)</li>
+				<li class="fragment">Clojure on Android apps start slowly (2s minimum)</li>
 				<li class="fragment">...even on ART (1.5s minimum)</li>
 				<li class=fragment>...and it scales upwards quickly (deps benchmark: 2-2.7s)</li>
 			</ul>
@@ -467,117 +519,144 @@ public static Observable fetchUsers(){
 			<p>Rich Hickey, the creator of Clojure <br/> (as quoted by David Nolen)</p>
         </section>
 
+        <section data-background="white">
+            <h3>Clojure Hello World Breakdown</h3>
+            <img class="half-image" data-src="img/clojure_dalvik_breakdown.svg" />
+            <img class="half-image" data-src="img/clojure_jvm_breakdown.svg" />
+            <ul>
+                <li class="fragment">Loading Clojure core: ~80% of time</li>
+            </ul>
+        </section>
+
 		<section>
-			Why does Clojure start slowly?
-			<p class="fragment">Let's profile it.</p>
-		</section>
-
-		<section data-background="white">
-			<h4>Clojure Hello World profiled execution (1/2)</h4>
-			<img class="normal-image" data-src="img/clojure_boot_trace.png" />
-			<div class="fragment">-> Loading the Clojure runtime: ~93%</div>
-			<div class="fragment">-> Loading the Clojure core namespace: ~80%</div>
-		</section>
-		</section>
-
-		<section data-background="white">
-			<h4>Clojure Hello World profiled startup (2/2)</h4>
-			<img class="normal-image" data-src="img/clojure_boot_trace_core.png" />
-		</section>
-
-		<section data-background="white">
-			<section data-background="white">
-				<p>Clojure Android Dalvik startup breakdown</p>
-				<div id="dalvikBootstrappingTimes" class="diagram"></div>
-			</section>
-
-            <section data-background="white">
-                <p>Clojure JVM startup breakdown</p>
-                <div id="bootstrappingTimes" class="diagram"></div>
-			</section>
+			<h3>What is "Clojure core"?</h3>
+			<ul>
+				<li class="fragment">clojure.core namespace</li>
+				<li class="fragment">Defines almost all of the functionality of the language</li>
+				<ul>
+                    <li class="fragment">e.g. when, =, and, or</li>
+                    <li class="fragment">e.g. basic data structures like vectors, maps, sets</li>
+                </ul>
+				<li class="fragment">Most are functions or macros (expanding to functions)</li>
+			</ul>
 		</section>
 
 		<section>
-			<h3>Why does Clojure start slowly?</h3>
-			<p class="fragment">When a Clojure program loads, it loads the Clojure runtime.</p>
-			<p class="fragment">Loading the Clojure runtime takes a lot of time.</p>
-		</section>
+        <section data-background="white">
+			<h3>Why is loading Clojure core so slow?</h3>
+			<img class="normal-image" data-src="img/namespace_vars.svg" />
+			<ul>
+				<li class="fragment">Functions are wrapped in vars</li>
+				<ul>
+					<li class="fragment">Var: pointer to a value</li>
+					<li class="fragment">Vars are dynamic: they can be given new values</li>
+				</ul>
+				<li class="fragment">Loading Clojure core sets up a var to point to every* function in the language.</li>
+            </ul>
+        </section>
 
 		<section>
-			<p>Why does loading the Clojure runtime take so long?</p>
-		</section>
-
-		<section>
-			<p>80% of load time: loading clojure/core__init.class</p>
-			<small><pre style="width: 100%;"><code>
-static {
-    // Create Vars and metadata (11/17%)
+			<h3>core__init.class</h3>
+			<ul>
+				<li>Clojure core = clojure.core namespace <br/>~= JVM class file core__init.class</li>
+				<span>
+				<li>Decompiled core__init.class looks like this:</li>
+				<small><pre style="width: 100%;"><code data-trim>
+static { // Create vars and metadata (11/17%)
     __init0();
     __init1();
-    __init2();
-    __init3();
-    // ...intermediate lines omitted
+    // ...
     __init23();
 
-    // (0%)
-    Compiler.pushNSandLoader(Class.forName("clojure.core__init").getClassLoader());
-    try{
-      // Assign Vars and metadata, load external functions (89/83%)
-      load();
-
-      // (0%)
-      Var.popThreadBindings();
-    }
-    finally
-    {
-      // (0%)
-      Var.popThreadBindings();
-      throw finally;
+    Compiler.pushNSandLoader(Class.forName("clojure.core__init").getClassLoader()); // (0%)
+    try {
+        load(); // Assign vars and metadata, load external functions (89/83%)
+        Var.popThreadBindings(); // (0%)
+    } finally {
+        Var.popThreadBindings(); // (0%)
+        throw finally;
     }
 }
 				</pre></code></small>
-			<p>clojure/core__init.class ~= Clojure core namespace</p>
+					</span>
+			</ul>
+			<span>
+			<li>__init methods create vars + metadata</li>
+			<small><pre style="width: 100%;"><code data-trim>
+Var const__cons = RT.var("clojure.core", "cons");
+AFn const__consMeta = RT.map(metaForCons);
+				</pre></code></small>
+			</span>
+			</ul>
+			<span>
+			<li>load method assigns vars + metadata</li>
+			<small><pre style="width: 100%;"><code data-trim>
+const__cons.setMeta(const__consMeta);
+const__cons.bindRoot(new core.cons());
+				</pre></code></small>
+			</span>
+			</ul>
 		</section>
 
-
 		<section data-background="white">
-			<div>__init class files set up namespace vars</div>
+			<h3>Clojure namespace</h3>
 			<img class="normal-image" data-src="img/namespace_vars.svg" />
 
-			<p>So if you use a function in your program:</p>
+			<small>
+				<ul>
+					<li>Namespace: mapping from symbol to var (to value)</li>
+				<span>
+				<li>So if you use a function in your program:</li>
 					<pre><code data-trim>
 						(cons 1 '(2 3))
 					</code></pre>
-
-			<p>It can be grabbed from the runtime namespace like this:</p>
+                </span>
+				<span>
+				<li>The decompiled JVM bytecode looks like this:</li>
 					<pre><code data-trim>
 						RT.var("clojure.core", "cons").getRawRoot().invoke(args);
 					</code></pre>
+                </span>
+					<li>Note indirection: fetch namespace, fetch var, fetch value, invoke</li>
+				</ul>
+			</small>
+		</section>
+        </section>
+
+		<section>
+		<section>
+			<h3>Why use dynamic vars? Clojure is <i>dynamic</i></h3>
+			<ul>
+				<li class="fragment">Dynamism is a Good Thing*</li>
+				<li class="fragment">Dynamic vars (and namespaces) allow you to redefine variables at run time without recompiling</li>
+				<li class="fragment">REPL-driven development
+					<ul>
+						<li class="fragment">Short feedback loops</li>
+						<li class="fragment">Iterative testing</li>
+						<li class="fragment">Develop software <i>while it's running</i></li>
+					</ul>
+				</li>
+			</ul>
 		</section>
 
 		<section>
-			<h3>Why? Clojure is <i>dynamic</i>.</h3>
+			<h3>Clojure dynamism</h3>
 			<ul>
-				<li class="fragment current-visible">Dynamic typing</li>
-				<li class="fragment"><strike>Dynamic typing</strike>. Yes but no. We're not talking about that.</li>
-				<li class="fragment">Dynamic: available at run time (not just compile time)</li>
-				<li class="fragment">Clojure is dynamic because it lets you do more stuff at run time</li>
+				<li><strike>Dynamic typing</strike>. Yes but no. We're not talking about that.</li>
+				<li>Dynamic: available at run time (not just compile time)</li>
+				<li>Clojure is dynamic because it lets you do more stuff at run time</li>
 				<ul>
-                    <li class="fragment">Dynamic binding</li>
-                    <li class="fragment">+ <i>reified</i> language constructs</li>
-                    <li class="fragment">+ dynamic compilation & evaluation</li>
-                    <li class="fragment">--> Dynamic development (REPL)</li>
-                </ul>
+					<li>Dynamic binding</li>
+					<li>+ <i>reified</i> language constructs</li>
+					<li>+ dynamic compilation & evaluation</li>
+					<li>--> Dynamic development (REPL)</li>
+				</ul>
 			</ul>
 			<br />
 			<br />
-			<blockquote class="fragment">
+			<blockquote>
 				Reification: turning a compiler detail into something you can play with at run time
 			</blockquote>
-		</section>
-
-		<section>
-			<h3>Why? Dynamism is a Good Thing*</h3>
 		</section>
 
 		<section>
@@ -604,7 +683,7 @@ hello.core=> (print-foo)
 
 		<section>
 			<section>
-			<p>Dynamic namespace binding</p>
+				<p>Dynamic namespace binding</p>
 					<pre><code data-trim>
 ; Create ns (compile to JVM class, load into JVM)
 user=> (ns hello)
@@ -628,22 +707,23 @@ hello=> (.getRawRoot (clojure.lang.RT/var "hello" "helloworld"))
 hello=> (.invoke (.getRawRoot (clojure.lang.RT/var "hello" "helloworld")))
 Hey world!
 nil
-</code></pre>
+					</code></pre>
 			</section>
 			<section>
-			<code data-trim><pre>
+				<code data-trim><pre>
 ; Inspect reified namespace
 ; Symbol 'helloworld in namespace hello
 ; points to a Var with a root binding of
 ; our defined function
 hello=> (ns-publics 'hello)
 {helloworld #'hello/helloworld}
-					</code></pre>
-				</section>
+				</code></pre>
+			</section>
+		</section>
 		</section>
 
-		<section>
-			<p>Dynamic, REPL-driven development</p>
+				<section>
+			<h3>REPL-driven development</h3>
 			<small>
 					<pre style="width: 100%;"><code class="clojure" style="width: 100%;">user=> (start-system)
 Connected to mongo at localhost: grub-dev
@@ -682,7 +762,7 @@ user=> system
 		<section>
 			<h3>But is dynamism always a Good Thing?</h3>
 			<ul>
-				<li class="fragment">The magic depends on dynamic binding and evaluation</li>
+				<li class="fragment">The magic depends on dynamic binding</li>
 				<li class="fragment">i.e. <i>somewhere</i> we need to set up namespaces and vars to point to the right things</li>
 				<li class="fragment">Clojure does it on startup -> Slow startup</li>
 			</ul>
@@ -695,12 +775,36 @@ user=> system
 		<section>
 			<h3>Lean Clojure</h3>
 			<ul>
-				<li>Idea: trade dynamic features for performance</li>
-				<li>Projects: Oxcart and Skummet (summer 2014)</li>
+				<li class="fragment blue">Idea: trade dynamic features for performance</li>
+				<li class="fragment">Dynamism for development, not production</li>
+				<li class="fragment">Drop:*
+					<ul>
+						<li class="fragment">Dynamic binding of vars, namespaces</li>
+						<li class="fragment">Dynamic compilation</li>
+						<li class="fragment">Dynamic development</li>
+					</ul>
+				</li>
+				<li class="fragment">Gain:
+					<ul>
+						<li class="fragment">Startup speed</li>
+						<li class="fragment">Execution speed</li>
+						<li class="fragment">Reduced memory usage</li>
+					</ul>
+				</li>
+				</ul>
+			</section>
+
+		<section>
+			<h3>Lean Clojure Projects: Oxcart and Skummet</h3>
+			<ul>
 				<li>Oxcart: based on Clojure in Clojure compiler</li>
-				<ul><li>Currently compiles a limited subset of Clojure so not discussed here.</li></ul>
+				<ul>
+					<li>Developed by Reid McKenzie over summer of 2014</li>
+					<li>Currently compiles a limited subset of Clojure so not discussed here.</li>
+				</ul>
 				<li>Skummet: based on standard compiler</li>
 				<ul>
+					<li>Developed by Alex Yakushev over summer of 2014</li>
 					<li style="font-weight: bold;">Mutable vars -> static class fields</li>
 					<li>Metadata trimming</li>
 					<li>No emission of macros</li>
@@ -709,7 +813,7 @@ user=> system
 		</section>
 
 		<section data-background="white">
-			<h3>Skummet in one diagram*</h3>
+			<h3>Skummet in one diagram</h3>
 			<div>Clojure:</div>
 			<img class="normal-image" style="max-width: 500px;" data-src="img/namespace_vars.svg" />
 			<div>Skummet:</div>
@@ -719,26 +823,30 @@ user=> system
 		<section>
 			<h3>Skummet</h3>
 			<ul>
-				<li>Main change: mutable vars -> static class fields</li>
-				<li>What we (hope to) get:
+				<li class="fragment">Main change: mutable vars -> static class fields</li>
+				<li class="fragment">What we (hope to) get:
 					<ul>
-						<li>Faster startup time from simpler loading process</li>
-						<li>Faster execution from fewer indirect calls</li>
+						<li class="fragment">Faster startup time from simpler loading process</li>
+						<li class="fragment">Faster execution from fewer indirect calls</li>
+						<span class="fragment">
 						Old:
 						<pre><code data-trim>
                         RT.var("clojure.core", "cons").getRawRoot().invoke(args);
-						</code> </pre>
+						</code></pre>
+                        </span>
+						<span class="fragment">
 						New:
 						<pre><code data-trim>
 							clojure.core$cons.invoke(args);
 						</code></pre>
+						</span>
 					</ul>
 				</li>
-				<li>What we lose:
+				<li class="fragment">What we lose:
 					<ul>
-						<li>Dynamic binding (*except when we explicitly need it)</li>
-						<li>Dynamic evaluation (for lean code)</li>
-						<li>Dynamic development (for lean code)</li>
+						<li class="fragment">Dynamic binding (*except when we explicitly need it)</li>
+						<li class="fragment">Dynamic evaluation (for lean code)</li>
+						<li class="fragment">Dynamic development (for lean code)</li>
 					</ul>
 				</li>
 			</ul>
@@ -749,27 +857,32 @@ user=> system
 		</section>
 
 		<section>
-			I don't know. Benchmark it.
+			<h3>Benchmarks</h3>
+			<ul>
+				<li>5 tests from Computer Language Benchmarks Game</li>
+				<ul>
+					<li>+ hello benchmark (Hello World)</li>
+					<li>+ dependencies benchmark</li>
+				</ul>
+				<li>Port to Android</li>
+				<li>Run 30 times on Nexus 5, Nexus 7 for average</li>
+				<li>Record <i>startup time</i> and <i>task time</i></li>
+			</ul>
 		</section>
 
 		<section data-background="white">
-			<p>Benchmark startup times</p>
-			<div id="startupTimesNexus5dalvik" class="diagram-startup"></div>
-			<div id="startupTimesNexus5art" class="diagram-startup"></div>
-			<div id="startupTimesNexus7dalvik" class="diagram-startup"></div>
-			<div id="startupTimesNexus7art" class="diagram-startup"></div>
+			<h4>Benchmark startup times</h4>
+			<img class="normal-image" data-src="img/benchmark_startup_times.png" />
 		</section>
 
 		<section data-background="white">
 			<section>
-				Benchmark total times
-				<div id="helloBenchmark" class="diagram-benchmark"></div>
-				<div id="dependenciesBenchmark" class="diagram-benchmark"></div>
-				<div id="binarytreesBenchmark" class="diagram-benchmark"></div>
-				<div id="fannkuchreduxBenchmark" class="diagram-benchmark"></div>
-				<div id="nbodyBenchmark" class="diagram-benchmark"></div>
-				<div id="pidigitsBenchmark" class="diagram-benchmark"></div>
-				<div id="spectralnormBenchmark" class="diagram-benchmark"></div>
+				<h4>Benchmark total run times</h4>
+				<br/>
+				<img class="benchmarks-image" data-src="img/benchmarks1.png" />
+				<img class="benchmarks-image" data-src="img/benchmarks2.png" />
+				<img class="benchmarks-image" data-src="img/benchmarks3.png" />
+				<img class="benchmarks-image" data-src="img/benchmarks4.png" />
             </section>
 			<section>
 				<div id="helloBenchmark2" class="diagram"></div>
@@ -801,7 +914,7 @@ user=> system
 				<li class="fragment">...even on ART (1.5s minimum)</li>
                 <li class=fragment>...and it scales upwards quickly (deps benchmark: 2-2.7s)</li>
                 <li class="fragment">Lean Clojure helps (~0.7s minimum)</li>
-				<li class=fragment>...but it's not good enough (Java: 0.1s minimum)</li>
+				<li class=fragment>...but it's not enough (Java: 0.1s minimum)</li>
             </ul>
 		</section>
 		<section>
@@ -814,12 +927,14 @@ user=> system
         </section>
 
 		<section>
-			<h3>Will I ever be able to use Clojure on Android?</h3>
-			<span class="fragment">Yes, if:</span>
+			<img class="normal-image" data-src="img/clojure_plus_android.png" />
+			<h3 class="fragment">Will I ever be able to use Clojure on Android?</h3>
+            </span>
+			<h4 class="fragment">Yes, if:</h4>
 			<ul>
-				<li class="fragment">a) You don't care about startup time &rarr; use Clojure (now)</li>
-				<li class="fragment">b) Motivated developer(s) continue lean Clojure idea &rarr; use new lean Clojure (sometime)</li>
-				<li class="fragment">c) ClojureScript + wrapper framework (React Native?) &rarr; use ClojureScript (soon)</li>
+				<li class="fragment">You don't care about startup time &rarr; use Clojure (now)</li>
+				<li class="fragment">Motivated developers continue lean Clojure &rarr; use lean Clojure (sometime)</li>
+				<li class="fragment">ClojureScript + wrapper framework (React Native?) &rarr; use ClojureScript (soon)</li>
 			</ul>
 		</section>
 

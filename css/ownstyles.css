@@ -18,6 +18,23 @@
   border: none;
   box-shadow: none;
 }
+
+.reveal section img.benchmarks-image {
+    background: none;
+    border: none;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    width: 48%;
+    display: inline-block;
+}
+
+.reveal section img.half-image {
+    background: none;
+    border: none;
+    box-shadow: none;
+    width: 45%;
+}
 /************************************************/
 
 .small {
@@ -62,15 +79,16 @@
 }
 
 .blue {
-    color: #42affa;
+    /*color: #42affa;*/
+    color: #1B91FF;
 }
 
 .green {
-    color: green;
+    color: #03ee02;
 }
 
 .red {
-    color: #b5301f;
+    color: #ff3f3e;
 }
 
 .light-red {
