@@ -399,7 +399,7 @@ public static Observable fetchUsers(){
 			</code></pre>
 			<ul>
 				<li class="fragment">Displays a text field with "Hello world"</li>
-				<li class="fragment">i.e. does almost nothing</li>
+				<li class="fragment">i.e. does almost nothing (but in Clojure)</li>
 			</ul>
 		</section>
 
@@ -515,44 +515,51 @@ public static Observable fetchUsers(){
 		</section>
 
 		<section>
-			<img class="normal-image" data-src="img/hickey_not_awesome.jpg" />
+			<img style="width: 80%;" class="normal-image" data-src="img/hickey_not_awesome.jpg" />
 			<p>Rich Hickey, the creator of Clojure <br/> (as quoted by David Nolen)</p>
         </section>
+
+		<section>
+			Profile it.
+		</section>
 
         <section data-background="white">
             <h3>Clojure Hello World Breakdown</h3>
             <img class="half-image" data-src="img/clojure_dalvik_breakdown.svg" />
             <img class="half-image" data-src="img/clojure_jvm_breakdown.svg" />
             <ul>
-                <li class="fragment">Loading Clojure core: ~80% of time</li>
+				<li class="fragment">Loading virtual machine: ~6% of time (50-120 ms)</li>
+                <li class="fragment">Loading Clojure core: ~80% of time (700-1500 ms)</li>
             </ul>
         </section>
 
 		<section>
 			<h3>What is "Clojure core"?</h3>
 			<ul>
-				<li class="fragment">clojure.core namespace</li>
-				<li class="fragment">Defines almost all of the functionality of the language</li>
-				<ul>
-                    <li class="fragment">e.g. when, =, and, or</li>
-                    <li class="fragment">e.g. basic data structures like vectors, maps, sets</li>
-                </ul>
-				<li class="fragment">Most are functions or macros (expanding to functions)</li>
-			</ul>
-		</section>
-
-		<section>
-        <section data-background="white">
-			<h3>Why is loading Clojure core so slow?</h3>
-			<img class="normal-image" data-src="img/namespace_vars.svg" />
-			<ul>
-				<li class="fragment">Functions are wrapped in vars</li>
+				<li class="fragment">The Clojure language = mostly functions</li>
+				<li class="fragment">Functions are wrapped in vars.</li>
 				<ul>
 					<li class="fragment">Var: pointer to a value</li>
 					<li class="fragment">Vars are dynamic: they can be given new values</li>
 				</ul>
-				<li class="fragment">Loading Clojure core sets up a var to point to every* function in the language.</li>
-            </ul>
+				<li class="fragment">Vars are organized by namespaces.</li>
+				<li class="fragment">The clojure.core namespace defines most Clojure functions</li>
+				<ul>
+					<li class="fragment">e.g. when, =, and, or</li>
+					<li class="fragment">e.g. basic data structures like vectors, maps, sets</li>
+				</ul>
+			</ul>
+		</section>
+
+		<section>
+			<section data-background="white">
+				<h3>Why is loading Clojure core so slow?</h3>
+				<ul>
+					<li class="fragment">You need to set up those vars somewhere.</li>
+					<li class="fragment">Clojure sets up vars when a namespace is loaded.</li>
+					<li class="fragment">Loading clojure.core namespace bootstraps the language.</li>
+				<span class="fragment"><img class="normal-image" data-src="img/namespace_vars.svg" /> </span>
+			</ul>
         </section>
 
 		<section>
@@ -625,7 +632,7 @@ const__cons.bindRoot(new core.cons());
 
 		<section>
 		<section>
-			<h3>Why use dynamic vars? Clojure is <i>dynamic</i></h3>
+			<h3>Why use dynamic vars? <span class="fragment">Clojure is <i>dynamic</i></span></h3>
 			<ul>
 				<li class="fragment">Dynamism is a Good Thing*</li>
 				<li class="fragment">Dynamic vars (and namespaces) allow you to redefine variables at run time without recompiling</li>
@@ -755,7 +762,7 @@ user=> system
 			<small><a href="http://thinkrelevance.com/blog/2013/06/04/clojure-workflow-reloaded">(Stuart Sierra "Reloaded" workflow)</a></small>
 		</section>
 
-		<section data-background="img/tesla.jpg">
+		<section data-transition="slide" data-background="img/tesla.jpg" data-background-transition="zoom">
 			<p style="position: absolute; top: 0; background-color: black;">Which is like swapping your engine while driving</p>
 		</section>
 
@@ -777,7 +784,7 @@ user=> system
 			<ul>
 				<li class="fragment blue">Idea: trade dynamic features for performance</li>
 				<li class="fragment">Dynamism for development, not production</li>
-				<li class="fragment">Drop:*
+				<li class="fragment">Drop:
 					<ul>
 						<li class="fragment">Dynamic binding of vars, namespaces</li>
 						<li class="fragment">Dynamic compilation</li>
@@ -797,17 +804,23 @@ user=> system
 		<section>
 			<h3>Lean Clojure Projects: Oxcart and Skummet</h3>
 			<ul>
-				<li>Oxcart: based on Clojure in Clojure compiler</li>
+				<li class="fragment">Google Summer of Code 2014</li>
+				<li class="fragment">Oxcart</li>
 				<ul>
-					<li>Developed by Reid McKenzie over summer of 2014</li>
-					<li>Currently compiles a limited subset of Clojure so not discussed here.</li>
+					<li class="fragment">Based on experimental Clojure in Clojure compiler</li>
+					<li class="fragment">Developed by Reid McKenzie</li>
+					<li class="fragment">Compiles a limited subset of Clojure -> can't test</li>
 				</ul>
-				<li>Skummet: based on standard compiler</li>
+				<li class="fragment">Skummet</li>
 				<ul>
-					<li>Developed by Alex Yakushev over summer of 2014</li>
-					<li style="font-weight: bold;">Mutable vars -> static class fields</li>
-					<li>Metadata trimming</li>
-					<li>No emission of macros</li>
+					<li class="fragment">Based on standard compiler</li>
+					<li class="fragment">Developed by Alexander Yakushev</li>
+					<li class="fragment">Changes:</li>
+					<ul>
+						<li class="fragment" style="font-weight: bold;">Mutable vars -> static class fields</li>
+						<li class="fragment">(metadata trimming)</li>
+						<li class="fragment">(no emission of macros)</li>
+					</ul>
 				</ul>
 			</ul>
 		</section>
@@ -927,14 +940,17 @@ user=> system
         </section>
 
 		<section>
+			<h3>Will I ever be able to use Clojure on Android?</h3>
 			<img class="normal-image" data-src="img/clojure_plus_android.png" />
-			<h3 class="fragment">Will I ever be able to use Clojure on Android?</h3>
-            </span>
+			</span>
 			<h4 class="fragment">Yes, if:</h4>
 			<ul>
 				<li class="fragment">You don't care about startup time &rarr; use Clojure (now)</li>
-				<li class="fragment">Motivated developers continue lean Clojure &rarr; use lean Clojure (sometime)</li>
-				<li class="fragment">ClojureScript + wrapper framework (React Native?) &rarr; use ClojureScript (soon)</li>
+				<li class="fragment">Lean Clojure is continued &rarr; use lean Clojure (sometime)</li>
+				<li class="fragment">Wrapper framework + ClojureScript is OK <br/>&rarr; use ClojureScript (now)</li>
+				<ul>
+					<li class="fragment">React Native soon?</li>
+				</ul>
 			</ul>
 		</section>
 
